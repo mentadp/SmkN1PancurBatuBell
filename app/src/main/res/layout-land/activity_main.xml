@@ -8,7 +8,7 @@
     android:padding="28dp"
     android:baselineAligned="false">
 
-    <!-- Kolom Kiri: Jam Digital Raksasa & Identitas -->
+    <!-- Kolom Kiri: Jam Digital & Identitas -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -107,7 +107,7 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Kolom Kanan: Status & Kontrol Sentuh IFP -->
+    <!-- Kolom Kanan: Status, Kontrol Sentuh IFP & Credit -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -233,6 +233,16 @@
                 android:backgroundTint="#DC2626"
                 android:layout_marginStart="10dp" />
         </LinearLayout>
+
+        <!-- Developer Credit Badge IFP (Menta) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Developed by Menta • SMKN 1 Pancur Batu"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            android:gravity="end"
+            android:layout_marginTop="12dp" />
 
     </LinearLayout>
 

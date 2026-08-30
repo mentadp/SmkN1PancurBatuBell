@@ -193,8 +193,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginTop="20dp">
 
             <Button
                 android:id="@+id/btnPlayNow"
@@ -219,6 +218,17 @@
                 android:backgroundTint="#DC2626"
                 android:layout_marginTop="10dp" />
         </LinearLayout>
+
+        <!-- Developer Credit Badge (Menta) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Developed by Menta • SMKN 1 Pancur Batu"
+            android:textColor="#64748B"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 </ScrollView>
