@@ -1,22 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     android:background="#0F172A"
-    android:fillViewport="true">
+    android:padding="28dp"
+    android:baselineAligned="false">
 
+    <!-- Kolom Kiri: Jam Digital Raksasa & Identitas -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="45"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_marginEnd="16dp">
 
-        <!-- Header Sekolah -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="#334155"
@@ -26,34 +29,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="18dp"
-                android:gravity="center">
+                android:padding="22dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SMK NEGERI 1 PANCUR BATU"
                     android:textColor="#38BDF8"
-                    android:textSize="18sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:gravity="center" />
+                    android:letterSpacing="0.04" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Otomasi Lagu Indonesia Raya"
+                    android:text="Sistem Otomasi Lagu Kebangsaan Indonesia Raya"
                     android:textColor="#94A3B8"
                     android:textSize="13sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Jam Digital Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="#334155"
@@ -61,7 +63,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:padding="20dp">
@@ -72,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:text="10:00:00"
                     android:textColor="#F8FAFC"
-                    android:textSize="40sp"
+                    android:textSize="58sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -81,35 +83,42 @@
                     android:layout_height="wrap_content"
                     android:text="Memuat tanggal..."
                     android:textColor="#38BDF8"
-                    android:textSize="14sp"
-                    android:layout_marginTop="2dp" />
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    app:cardCornerRadius="10dp"
+                    android:layout_marginTop="18dp"
+                    app:cardCornerRadius="12dp"
                     app:cardBackgroundColor="#0F172A">
 
                     <TextView
                         android:id="@+id/tvNextSchedule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⏰ Jadwal: Senin - Jumat pukul 10:00 WIB"
+                        android:text="⏰ Jadwal: Setiap Senin - Jumat pukul 10:00 WIB"
                         android:textColor="#E2E8F0"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:gravity="center"
-                        android:padding="10dp" />
+                        android:padding="12dp" />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
-        <!-- Status Bluetooth -->
+    <!-- Kolom Kanan: Status & Kontrol Sentuh IFP -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="55"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="#334155"
@@ -119,14 +128,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="STATUS AUDIO"
+                    android:text="STATUS KONEKTIVITAS AUDIO"
                     android:textColor="#94A3B8"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -134,19 +143,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mengecek status Bluetooth..."
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="#F8FAFC"
-                    android:layout_marginTop="6dp" />
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Mode Libur -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="#334155"
@@ -156,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="20dp"
                 android:gravity="center_vertical">
 
                 <LinearLayout
@@ -169,15 +177,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mode Libur Sekolah"
-                        android:textSize="15sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
                         android:textColor="#F8FAFC" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Matikan sementara saat libur"
-                        android:textSize="12sp"
+                        android:text="Matikan otomatisasi sementara saat libur"
+                        android:textSize="13sp"
                         android:textColor="#94A3B8" />
                 </LinearLayout>
 
@@ -188,37 +196,44 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Tombol Kontrol -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="16dp">
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
 
             <Button
                 android:id="@+id/btnPlayNow"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_width="0dp"
+                android:layout_height="68dp"
+                android:layout_weight="1"
                 android:text="▶  Putar Sekarang"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                app:cornerRadius="12dp"
-                android:backgroundTint="#059669" />
+                app:cornerRadius="16dp"
+                android:backgroundTint="#059669"
+                android:layout_marginEnd="10dp" />
 
             <Button
                 android:id="@+id/btnStop"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_width="0dp"
+                android:layout_height="68dp"
+                android:layout_weight="1"
                 android:text="⏹  Hentikan Audio"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                app:cornerRadius="12dp"
+                app:cornerRadius="16dp"
                 android:backgroundTint="#DC2626"
-                android:layout_marginTop="10dp" />
+                android:layout_marginStart="10dp" />
         </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
