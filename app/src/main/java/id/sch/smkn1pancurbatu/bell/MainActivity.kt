@@ -2,6 +2,7 @@
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val updateRunnable = object : Runnable {
         override fun run() {
             updateStatus()
-            handler.postDelayed(this, 3000)
+            handler.postDelayed(this, 1000) // Update jam setiap detik
         }
     }
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.switchHoliday.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("HOLIDAY_MODE", isChecked).apply()
-            val msg = if (isChecked) "Mode Libur Aktif" else "Mode Sekolah Aktif"
+            val msg = if (isChecked) "Mode Libur Aktif (Lagu Tidak Diputar)" else "Mode Sekolah Aktif (Lagu Diputar 10:00 WIB)"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             updateStatus()
         }
@@ -67,21 +68,25 @@ class MainActivity : AppCompatActivity() {
         binding.btnStop.setOnClickListener {
             val serviceIntent = Intent(this, AudioService::class.java).apply { action = "ACTION_STOP" }
             startService(serviceIntent)
-            Toast.makeText(this, "Lagu dihentikan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Audio dihentikan", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun updateStatus() {
-        val currentTime = SimpleDateFormat("HH:mm:ss 'WIB' - EEEE, dd MMMM yyyy", Locale("id", "ID")).format(Date())
-        binding.tvCurrentTime.text = currentTime
+        val now = Date()
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale("id", "ID"))
+        val dateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID"))
+
+        binding.tvClockTime.text = "${timeFormat.format(now)} WIB"
+        binding.tvClockDate.text = dateFormat.format(now)
 
         val isBtConnected = BluetoothHelper.isBluetoothSpeakerConnected(this)
         if (isBtConnected) {
-            binding.tvBluetoothStatus.text = "🟢 Speaker Bluetooth: Terhubung (Audio Siap)"
-            binding.tvBluetoothStatus.setTextColor(getColor(android.R.color.holo_green_dark))
+            binding.tvBluetoothStatus.text = "🟢 Speaker Bluetooth: Terhubung (Output Siap)"
+            binding.tvBluetoothStatus.setTextColor(Color.parseColor("#4ADE80"))
         } else {
             binding.tvBluetoothStatus.text = "🟠 Speaker Bluetooth: Tidak Terhubung (Speaker Internal IFP)"
-            binding.tvBluetoothStatus.setTextColor(getColor(android.R.color.holo_orange_dark))
+            binding.tvBluetoothStatus.setTextColor(Color.parseColor("#FBBF24"))
         }
     }
 }
