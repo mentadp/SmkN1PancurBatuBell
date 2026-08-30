@@ -22,10 +22,14 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Terima Lisensi Android SDK & Download Platform 34
+      - name: Terima Lisensi Android SDK
         run: |
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Bersihkan Karakter Tersembunyi BOM Windows (Auto-Fix)
+        run: |
+          find . -type f \( -name "*.xml" -o -name "*.kt" -o -name "*.kts" -o -name "*.properties" \) -exec sed -i '1s/^\xEF\xBB\xBF//' {} +
 
       - name: Pastikan Folder & File Audio Ada
         run: |
