@@ -1,4 +1,4 @@
-﻿name: Build APK SMKN 1 Pancur Batu
+name: Build APK SMKN 1 Pancur Batu
 
 on:
   push:
@@ -20,12 +20,11 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Berikan Izin Eksekusi Gradle
-        run: chmod +x gradlew || true
+        with:
+          gradle-version: '8.2'
 
       - name: Compile & Build Debug APK
-        run: gradle assembleDebug
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload File APK Siap Pakai
         uses: actions/upload-artifact@v4
