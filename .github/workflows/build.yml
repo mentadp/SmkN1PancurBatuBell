@@ -22,6 +22,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Terima Lisensi Android SDK & Download Platform 34
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
       - name: Pastikan Folder & File Audio Ada
         run: |
           mkdir -p app/src/main/res/raw
@@ -29,16 +34,17 @@ jobs:
             echo "ID3" > app/src/main/res/raw/indonesia_raya.mp3
           fi
 
-      - name: Setup Gradle Versi 8.4 (Stabil untuk Android)
+      - name: Setup Gradle 8.4
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.4'
 
       - name: Compile & Build Debug APK
-        run: gradle assembleDebug --stacktrace
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload File APK Siap Download
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Otomasi_IndonesiaRaya_SMKN1_PancurBatu
           path: app/build/outputs/apk/debug/app-debug.apk
