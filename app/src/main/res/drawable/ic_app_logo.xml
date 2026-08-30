@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background Circle Slate -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M54,4 C26.386,4 4,26.386 4,54 C4,81.614 26.386,104 54,104 C81.614,104 104,81.614 104,54 C104,26.386 81.614,4 54,4 Z" />
+    
+    <!-- Ring Cyan Border -->
+    <path
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:pathData="M54,10 C29.7,10 10,29.7 10,54 C10,78.3 29.7,98 54,98 C78.3,98 98,78.3 98,54 C98,29.7 78.3,10 54,10 Z" />
+
+    <!-- Lonceng / Bell Emas -->
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M54,28 C50.7,28 48,30.7 48,34 L48,36 C41.4,38.2 36,44.5 36,52 L36,66 L30,72 L30,74 L78,74 L78,72 L72,66 L72,52 C72,44.5 66.6,38.2 60,36 L60,34 C60,30.7 57.3,28 54,28 Z" />
+        
+    <!-- Bandul Lonceng -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M48,76 C48,79.3 50.7,82 54,82 C57.3,82 60,79.3 60,76 Z" />
+
+    <!-- Pita Merah Putih Indonesia -->
+    <path
+        android:fillColor="#EF4444"
+        android:pathData="M38,48 L70,48 L68,43 L40,43 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,53 L68,53 L70,48 L38,48 Z" />
+
+    <!-- Gelombang Audio Suara -->
+    <path
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M24,46 C21,51 21,57 24,62 M84,46 C87,51 87,57 84,62" />
+</vector>

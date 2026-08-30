@@ -16,7 +16,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@android:drawable/ic_lock_silent_mode_off"
+        android:icon="@drawable/ic_app_logo"
+        android:roundIcon="@drawable/ic_app_logo"
         android:label="Otomasi Indonesia Raya - SMKN 1 Pancur Batu"
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
