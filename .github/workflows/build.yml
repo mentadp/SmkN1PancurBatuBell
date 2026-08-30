@@ -5,6 +5,10 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+# Berikan izin ke GitHub untuk membuat halaman Release
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +31,7 @@ jobs:
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Bersihkan Karakter Tersembunyi BOM Windows (Auto-Fix)
+      - name: Bersihkan Karakter Tersembunyi BOM Windows
         run: |
           find . -type f \( -name "*.xml" -o -name "*.kt" -o -name "*.kts" -o -name "*.properties" \) -exec sed -i '1s/^\xEF\xBB\xBF//' {} +
 
@@ -46,9 +50,16 @@ jobs:
       - name: Compile & Build Debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload File APK Siap Download
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Rename APK agar Rapi
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk SMKN1_Pancur_Batu_Indonesia_Raya_v1.0.apk
+
+      - name: Upload File ke Halaman Releases GitHub
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/heads/')
         with:
-          name: Otomasi_IndonesiaRaya_SMKN1_PancurBatu
-          path: app/build/outputs/apk/debug/app-debug.apk
+          tag_name: v1.0.0
+          name: "Rilis v1.0.0 - Bel Otomatis SMKN 1 Pancur Batu"
+          draft: false
+          prerelease: false
+          files: SMKN1_Pancur_Batu_Indonesia_Raya_v1.0.apk
