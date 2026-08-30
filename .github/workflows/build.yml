@@ -8,26 +8,38 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Pastikan Folder & File Audio Ada (Auto-Placeholder)
+        run: |
+          mkdir -p app/src/main/res/raw
+          if [ ! -f "app/src/main/res/raw/indonesia_raya.mp3" ]; then
+            echo "Membuat file placeholder audio..."
+            echo "ID3" > app/src/main/res/raw/indonesia_raya.mp3
+          fi
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.2'
 
-      - name: Compile & Build Debug APK
-        run: gradle assembleDebug --stacktrace
+      - name: Build Debug APK
+        run: |
+          gradle assembleDebug --stacktrace
 
-      - name: Upload File APK Siap Pakai
+      - name: Upload File APK Siap Download
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Otomasi_IndonesiaRaya_SMKN1_PancurBatu
           path: app/build/outputs/apk/debug/app-debug.apk
