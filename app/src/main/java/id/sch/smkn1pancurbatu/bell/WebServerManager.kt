@@ -83,7 +83,9 @@ class WebServerManager(private val context: Context, port: Int = 8080) : NanoHTT
         when (uri) {
             "/api/status" -> {
                 val status = ScheduleManager.getCurrentStatus(context)
+                val currentVersion = AppUpdater.getCurrentVersionName(context)
                 val json = JSONObject().apply {
+                    put("version", currentVersion)
                     put("isHoliday", status.isHoliday)
                     put("announcement", status.announcement)
                     put("remainingMinutes", status.remainingMinutes)

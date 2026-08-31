@@ -97,6 +97,11 @@
             color: #FFF;
         }
 
+        .btn-purple {
+            background: #7C3AED;
+            color: #FFF;
+        }
+
         .btn:hover {
             opacity: 0.9;
             transform: scale(0.98);
@@ -197,11 +202,13 @@
                 <h1>SMK NEGERI 1 PANCUR BATU</h1>
                 <p>Panel Remote Kontrol Bel &amp; Jadwal Pelajaran Smartboard IFP</p>
             </div>
-            <div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <span class="status-badge badge-green" id="appVersionBadge">Versi v2.0.0</span>
                 <span class="status-badge badge-green" id="btBadge">Memeriksa Audio...</span>
             </div>
         </div>
 
+        <!-- Remote Soundboard -->
         <div class="card">
             <h2>🔊 Remote Soundboard Darurat</h2>
             <p style="color:#94A3B8; font-size:13px; margin-bottom:14px;">Bunyikan bel atau lagu kebangsaan secara
@@ -216,6 +223,7 @@
             </div>
         </div>
 
+        <!-- Running Text Pengumuman -->
         <div class="card">
             <h2>📢 Kirim Pengumuman Running Text</h2>
             <p style="color:#94A3B8; font-size:13px; margin-bottom:10px;">Teks ini akan langsung berjalan di bagian
@@ -224,6 +232,7 @@
             <button class="btn btn-primary" onclick="saveAnnouncement()">Kirim ke Layar Smartboard</button>
         </div>
 
+        <!-- Kelola Jadwal Pelajaran -->
         <div class="card">
             <h2>📅 Kelola Jadwal Pelajaran (Senin - Jumat)</h2>
             <p style="color:#94A3B8; font-size:13px; margin-bottom:10px;">Pilih hari untuk melihat dan mengubah jadwal
@@ -256,6 +265,7 @@
             </div>
         </div>
 
+        <!-- Mode Libur & Info Sistem -->
         <div class="card"
             style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
             <div>
@@ -294,6 +304,7 @@
         function loadData() {
             fetch('/api/status').then(r => r.json()).then(res => {
                 document.getElementById('announcementInput').value = res.announcement || '';
+                document.getElementById('appVersionBadge').innerText = 'Versi v' + (res.version || '2.0.0');
                 document.getElementById('btBadge').innerText = res.isBluetoothConnected ? '🟢 Speaker BT Terhubung' : '🟠 Speaker Internal IFP';
             });
 

@@ -1,5 +1,6 @@
 ﻿package id.sch.smkn1pancurbatu.bell
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import id.sch.smkn1pancurbatu.bell.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
@@ -89,7 +91,61 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Audio dihentikan", Toast.LENGTH_SHORT).show()
         }
 
+        // Tombol Periksa Update Otomatis (In-App OTA)
+        binding.btnCheckUpdate.setOnClickListener {
+            checkAppUpdate()
+        }
+
         binding.tvRunningText.isSelected = true
+    }
+
+    private fun checkAppUpdate() {
+        Toast.makeText(this, "Memeriksa pembaruan di GitHub...", Toast.LENGTH_SHORT).show()
+        AppUpdater.checkForUpdate(this) { updateInfo ->
+            if (updateInfo.hasUpdate) {
+                AlertDialog.Builder(this)
+                    .setTitle("🎉 Pembaruan Versi Baru Tersedia!")
+                    .setMessage("Versi terbaru (${updateInfo.latestVersion}) ditemukan di GitHub.\n\nCatatan Rilis:\n${updateInfo.releaseNotes}\n\nApakah Anda ingin mengunduh dan memperbarui aplikasi sekarang?")
+                    .setPositiveButton("Update Sekarang") { _, _ ->
+                        startDownloadingUpdate(updateInfo.downloadUrl)
+                    }
+                    .setNegativeButton("Nanti Saja", null)
+                    .show()
+            } else {
+                Toast.makeText(this, "✅ Aplikasi sudah menggunakan versi terbaru.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun startDownloadingUpdate(downloadUrl: String) {
+        val progressDialog = ProgressDialog(this).apply {
+            setTitle("Mengunduh Pembaruan")
+            setMessage("Sedang mengunduh file APK terbaru...")
+            setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            max = 100
+            setCancelable(false)
+            show()
+        }
+
+        AppUpdater.downloadAndInstall(
+            this,
+            downloadUrl,
+            onProgress = { progress ->
+                progressDialog.progress = progress
+            },
+            onComplete = {
+                progressDialog.dismiss()
+                Toast.makeText(this, "Unduhan selesai! Membuka installer...", Toast.LENGTH_SHORT).show()
+            },
+            onError = { errorMsg ->
+                progressDialog.dismiss()
+                AlertDialog.Builder(this)
+                    .setTitle("Gagal Mengunduh")
+                    .setMessage(errorMsg)
+                    .setPositiveButton("Tutup", null)
+                    .show()
+            }
+        )
     }
 
     private fun updateDashboard() {
@@ -101,7 +157,8 @@ class MainActivity : AppCompatActivity() {
         binding.tvClockDate.text = dateFormat.format(now)
 
         val ipAddress = NetworkHelper.getLocalIpAddress(this)
-        binding.tvIpAddress.text = "🌐 Web Remote Admin: http://$ipAddress:8080"
+        val curVersion = AppUpdater.getCurrentVersionName(this)
+        binding.tvIpAddress.text = "🌐 Web: http://$ipAddress:8080 • v$curVersion"
 
         val status = ScheduleManager.getCurrentStatus(this)
         binding.tvRunningText.text = "📢 PENGUMUMAN: ${status.announcement}"

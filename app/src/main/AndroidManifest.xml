@@ -10,10 +10,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Izin Jaringan Lokal WiFi & Web Server -->
+    <!-- Izin Jaringan Lokal & Download Update -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Izin Auto-Install APK Baru -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- Izin Bluetooth & Audio -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -56,6 +59,17 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
+        <!-- Provider untuk Membuka & Menginstall APK Baru -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="id.sch.smkn1pancurbatu.bell.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 </manifest>
