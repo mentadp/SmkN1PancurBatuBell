@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Admin Bel & Jadwal - SMKN 1 Pancur Batu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: #0F172A;
+            color: #F8FAFC;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #1E293B;
+            border: 1px solid #334155;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            color: #38BDF8;
+        }
+
+        .header p {
+            color: #94A3B8;
+            font-size: 13px;
+        }
+
+        .card {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            color: #F8FAFC;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #0284C7;
+            color: #FFF;
+        }
+
+        .btn-success {
+            background: #059669;
+            color: #FFF;
+        }
+
+        .btn-danger {
+            background: #DC2626;
+            color: #FFF;
+        }
+
+        .btn-warning {
+            background: #D97706;
+            color: #FFF;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .soundboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: #FFF;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #334155;
+            text-align: left;
+        }
+
+        th {
+            background: #0F172A;
+            color: #38BDF8;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-green {
+            background: #065F46;
+            color: #34D399;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .login-box {
+            background: #1E293B;
+            border: 1px solid #334155;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 360px;
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="color:#38BDF8; margin-bottom:8px;">🔐 Login Admin Piket</h2>
+            <p style="color:#94A3B8; font-size:13px; margin-bottom:20px;">SMK NEGERI 1 PANCUR BATU</p>
+            <input type="password" id="pinInput" placeholder="PIN Admin (Default: 123456)"
+                style="text-align:center; font-size:18px; letter-spacing:4px;">
+            <button class="btn btn-primary" onclick="login()" style="width:100%; padding:14px;">Masuk ke
+                Dashboard</button>
+            <p id="loginError" style="color:#EF4444; font-size:12px; margin-top:10px;"></p>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display:none;">
+        <div class="header">
+            <div>
+                <h1>SMK NEGERI 1 PANCUR BATU</h1>
+                <p>Panel Remote Kontrol Bel &amp; Jadwal Pelajaran Smartboard IFP</p>
+            </div>
+            <div>
+                <span class="status-badge badge-green" id="btBadge">Memeriksa Audio...</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔊 Remote Soundboard Darurat</h2>
+            <p style="color:#94A3B8; font-size:13px; margin-bottom:14px;">Bunyikan bel atau lagu kebangsaan secara
+                langsung ke speaker IFP kelas dari laptop Anda:</p>
+            <div class="soundboard">
+                <button class="btn btn-success" onclick="playAudio('ACTION_INDONESIA_RAYA')">🇮🇩 Putar Indonesia
+                    Raya</button>
+                <button class="btn btn-warning" onclick="playAudio('ACTION_BELL_ISTIRAHAT')">☕ Bel Istirahat</button>
+                <button class="btn btn-primary" onclick="playAudio('ACTION_BELL_MASUK')">📚 Bel Masuk Kelas</button>
+                <button class="btn btn-warning" onclick="playAudio('ACTION_BELL_PULANG')">🏠 Bel Pulang Sekolah</button>
+                <button class="btn btn-danger" onclick="playAudio('ACTION_STOP')">⏹ Hentikan Audio</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📢 Kirim Pengumuman Running Text</h2>
+            <p style="color:#94A3B8; font-size:13px; margin-bottom:10px;">Teks ini akan langsung berjalan di bagian
+                bawah layar Smartboard IFP:</p>
+            <input type="text" id="announcementInput" placeholder="Ketik pesan pengumuman untuk seluruh kelas...">
+            <button class="btn btn-primary" onclick="saveAnnouncement()">Kirim ke Layar Smartboard</button>
+        </div>
+
+        <div class="card">
+            <h2>📅 Kelola Jadwal Pelajaran (Senin - Jumat)</h2>
+            <p style="color:#94A3B8; font-size:13px; margin-bottom:10px;">Pilih hari untuk melihat dan mengubah jadwal
+                mapel:</p>
+            <select id="daySelect" onchange="renderScheduleTable()">
+                <option value="Senin">Senin</option>
+                <option value="Selasa">Selasa</option>
+                <option value="Rabu">Rabu</option>
+                <option value="Kamis">Kamis</option>
+                <option value="Jumat">Jumat</option>
+            </select>
+
+            <div style="overflow-x:auto;">
+                <table id="scheduleTable">
+                    <thead>
+                        <tr>
+                            <th>Jam Ke</th>
+                            <th>Mulai</th>
+                            <th>Selesai</th>
+                            <th>Mata Pelajaran</th>
+                            <th>Nama Guru</th>
+                            <th>Tipe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleBody"></tbody>
+                </table>
+            </div>
+            <div style="margin-top:16px; display:flex; gap:10px;">
+                <button class="btn btn-success" onclick="saveSchedule()">💾 Simpan Perubahan Jadwal</button>
+            </div>
+        </div>
+
+        <div class="card"
+            style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+                <h2>🏖️ Mode Libur Sekolah</h2>
+                <p style="color:#94A3B8; font-size:13px;">Matikan/jeda semua jadwal otomatis saat libur sekolah.</p>
+            </div>
+            <button class="btn btn-warning" onclick="toggleHoliday()">Ubah Mode Libur</button>
+        </div>
+
+        <p style="text-align:center; color:#64748B; font-size:12px; margin-top:20px;">Developed by Menta • SMK NEGERI 1
+            PANCUR BATU</p>
+    </div>
+
+    <script>
+        let scheduleData = [];
+
+        function login() {
+            const pin = document.getElementById('pinInput').value;
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pin: pin })
+            }).then(r => r.json()).then(res => {
+                if (res.status === 'success') {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    loadData();
+                } else {
+                    document.getElementById('loginError').innerText = 'PIN Salah!';
+                }
+            }).catch(() => {
+                document.getElementById('loginError').innerText = 'Koneksi ke Smartboard gagal!';
+            });
+        }
+
+        function loadData() {
+            fetch('/api/status').then(r => r.json()).then(res => {
+                document.getElementById('announcementInput').value = res.announcement || '';
+                document.getElementById('btBadge').innerText = res.isBluetoothConnected ? '🟢 Speaker BT Terhubung' : '🟠 Speaker Internal IFP';
+            });
+
+            fetch('/api/get-schedule').then(r => r.json()).then(data => {
+                scheduleData = data;
+                renderScheduleTable();
+            });
+        }
+
+        function renderScheduleTable() {
+            const selectedDay = document.getElementById('daySelect').value;
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+
+            scheduleData.forEach((item, index) => {
+                if (item.hari === selectedDay) {
+                    tbody.innerHTML += `
+                <tr>
+                    <td><input type="text" value="${item.jamKe}" onchange="updateItem(${index}, 'jamKe', this.value)"></td>
+                    <td><input type="text" value="${item.startTime}" onchange="updateItem(${index}, 'startTime', this.value)"></td>
+                    <td><input type="text" value="${item.endTime}" onchange="updateItem(${index}, 'endTime', this.value)"></td>
+                    <td><input type="text" value="${item.mapel}" onchange="updateItem(${index}, 'mapel', this.value)"></td>
+                    <td><input type="text" value="${item.guru}" onchange="updateItem(${index}, 'guru', this.value)"></td>
+                    <td>
+                        <select onchange="updateItem(${index}, 'type', this.value)">
+                            <option value="BELAJAR" ${item.type === 'BELAJAR' ? 'selected' : ''}>BELAJAR</option>
+                            <option value="ISTIRAHAT" ${item.type === 'ISTIRAHAT' ? 'selected' : ''}>ISTIRAHAT</option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+                }
+            });
+        }
+
+        function updateItem(index, key, val) {
+            scheduleData[index][key] = val;
+        }
+
+        function saveSchedule() {
+            fetch('/api/save-schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(scheduleData)
+            }).then(r => r.json()).then(res => {
+                alert(res.status === 'success' ? '✅ Jadwal Berhasil Disimpan & Sinkron ke Smartboard!' : 'Gagal menyimpan');
+            });
+        }
+
+        function saveAnnouncement() {
+            const text = document.getElementById('announcementInput').value;
+            fetch('/api/announcement', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            }).then(r => r.json()).then(res => {
+                alert(res.status === 'success' ? '✅ Pengumuman Terkirim ke Layar IFP!' : 'Gagal mengirim');
+            });
+        }
+
+        function playAudio(action) {
+            fetch('/api/play', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: action })
+            }).then(r => r.json()).then(() => {
+                alert('Perintah audio dikirim!');
+            });
+        }
+
+        function toggleHoliday() {
+            fetch('/api/toggle-holiday', {
+                method: 'POST'
+            }).then(r => r.json()).then(res => {
+                alert('Mode Libur sekarang: ' + (res.isHoliday ? 'AKTIF (Libur)' : 'NON-AKTIF (Sekolah)'));
+            });
+        }
+    </script>
+</body>
+
+</html>

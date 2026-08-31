@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.ToneGenerator
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -30,31 +31,78 @@ class AudioService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val action = intent?.action
+        val action = intent?.action ?: "ACTION_PLAY"
+
         if (action == "ACTION_STOP") {
             stopAudio()
             return START_NOT_STICKY
         }
-        startForeground(1001, buildNotification("Memutar Lagu Kebangsaan Indonesia Raya..."))
-        playIndonesiaRaya()
+
+        when (action) {
+            "ACTION_PLAY", "ACTION_INDONESIA_RAYA" -> {
+                startForeground(1001, buildNotification("Memutar Lagu Kebangsaan Indonesia Raya..."))
+                playAudioResource(R.raw.indonesia_raya)
+            }
+            "ACTION_BELL_ISTIRAHAT" -> {
+                startForeground(1001, buildNotification("Bel Masuk Waktu Istirahat..."))
+                playChimeSound(3)
+            }
+            "ACTION_BELL_MASUK" -> {
+                startForeground(1001, buildNotification("Bel Istirahat Selesai (Masuk Kelas)..."))
+                playChimeSound(2)
+            }
+            "ACTION_BELL_PULANG" -> {
+                startForeground(1001, buildNotification("Bel Pembelajaran Selesai (Pulang)..."))
+                playChimeSound(4)
+            }
+            else -> {
+                playChimeSound(1)
+            }
+        }
+
         return START_NOT_STICKY
     }
 
-    private fun playIndonesiaRaya() {
+    private fun boostVolume() {
         try {
             val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (maxVolume * 0.95).toInt(), 0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
+    private fun playAudioResource(resId: Int) {
+        try {
+            boostVolume()
             mediaPlayer?.release()
-            mediaPlayer = MediaPlayer.create(this, R.raw.indonesia_raya).apply {
+            mediaPlayer = MediaPlayer.create(this, resId).apply {
                 setOnCompletionListener { stopAudio() }
                 start()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            stopAudio()
+            playChimeSound(2)
         }
+    }
+
+    private fun playChimeSound(beeps: Int) {
+        Thread {
+            try {
+                boostVolume()
+                val toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+                for (i in 1..beeps) {
+                    toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_NETWORK_LITE, 600)
+                    Thread.sleep(800)
+                }
+                toneGen.release()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                stopAudio()
+            }
+        }.start()
     }
 
     private fun stopAudio() {
@@ -73,7 +121,7 @@ class AudioService : Service() {
                 "Bel Otomatis SMKN 1 Pancur Batu",
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Layanan Pemutaran Lagu Indonesia Raya Pukul 10:00 WIB"
+                description = "Layanan Bel dan Lagu Kebangsaan Sekolah"
             }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
