@@ -32,7 +32,7 @@ jobs:
 
       - name: Bersihkan Karakter Tersembunyi BOM Windows
         run: |
-          find . -type f \( -name "*.xml" -o -name "*.kt" -o -name "*.kts" -o -name "*.properties" \) -exec sed -i '1s/^\xEF\xBB\xBF//' {} +
+          find . -type f \( -name "*.xml" -o -name "*.kt" -o -name "*.kts" -o -name "*.properties" -o -name "*.html" \) -exec sed -i '1s/^\xEF\xBB\xBF//' {} +
 
       - name: Pastikan Folder & File Audio Ada
         run: |
@@ -41,8 +41,8 @@ jobs:
             echo "ID3" > app/src/main/res/raw/indonesia_raya.mp3
           fi
 
-      - name: Setup Gradle 8.4
-        uses: gradle/actions/setup-gradle@v3
+      - name: Setup Gradle 8.4 (Versi v4 Anti-Timeout)
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.4'
 
@@ -52,20 +52,16 @@ jobs:
       - name: Siapkan Nama Versi & File APK Dinamis
         id: versioning
         run: |
-          # 1. Ekstrak versionName dari app/build.gradle.kts
           RAW_VERSION=$(grep 'versionName' app/build.gradle.kts | head -n 1 | awk -F'"' '{print $2}')
           if [ -z "$RAW_VERSION" ]; then
-            RAW_VERSION="1.0.0"
+            RAW_VERSION="2.0.0"
           fi
           
-          # 2. Susun Tag Versi & Nama File APK Baru
           TAG="v${RAW_VERSION}-b${{ github.run_number }}"
           APK_FILENAME="SMKN1_Pancur_Batu_Indonesia_Raya_v${RAW_VERSION}_build${{ github.run_number }}.apk"
           
-          # 3. Rename File APK
           cp app/build/outputs/apk/debug/app-debug.apk "$APK_FILENAME"
           
-          # 4. Simpan Variabel untuk Langkah Release
           echo "APP_TAG=$TAG" >> $GITHUB_ENV
           echo "APP_VERSION=$RAW_VERSION" >> $GITHUB_ENV
           echo "APK_FILE=$APK_FILENAME" >> $GITHUB_ENV
