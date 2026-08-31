@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.ToneGenerator
@@ -19,12 +20,22 @@ class AudioService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private var wakeLock: PowerManager.WakeLock? = null
     private val CHANNEL_ID = "SMKN1_PANCUR_BATU_BELL_CHANNEL"
+    private val NOTIFICATION_ID = 1001
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+
+        // WAJIB: Panggil startForeground seketika di onCreate (detik ke-0) agar tidak kena timeout Android
+        val initialNotification = buildNotification("Layanan Audio Bel & Lagu Aktif")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, initialNotification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+        } else {
+            startForeground(NOTIFICATION_ID, initialNotification)
+        }
+
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SMKN1Bell::AudioWakeLock")
         wakeLock?.acquire(5 * 60 * 1000L)
@@ -40,19 +51,19 @@ class AudioService : Service() {
 
         when (action) {
             "ACTION_PLAY", "ACTION_INDONESIA_RAYA" -> {
-                startForeground(1001, buildNotification("Memutar Lagu Kebangsaan Indonesia Raya..."))
+                updateNotification("Memutar Lagu Kebangsaan Indonesia Raya...")
                 playAudioResource(R.raw.indonesia_raya)
             }
             "ACTION_BELL_ISTIRAHAT" -> {
-                startForeground(1001, buildNotification("Bel Masuk Waktu Istirahat..."))
+                updateNotification("Bel Masuk Waktu Istirahat...")
                 playChimeSound(3)
             }
             "ACTION_BELL_MASUK" -> {
-                startForeground(1001, buildNotification("Bel Istirahat Selesai (Masuk Kelas)..."))
+                updateNotification("Bel Istirahat Selesai (Masuk Kelas)...")
                 playChimeSound(2)
             }
             "ACTION_BELL_PULANG" -> {
-                startForeground(1001, buildNotification("Bel Pembelajaran Selesai (Pulang)..."))
+                updateNotification("Bel Pembelajaran Selesai (Pulang)...")
                 playChimeSound(4)
             }
             else -> {
@@ -106,12 +117,19 @@ class AudioService : Service() {
     }
 
     private fun stopAudio() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
-        if (wakeLock?.isHeld == true) wakeLock?.release()
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
+        try {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+
+            if (wakeLock?.isHeld == true) {
+                wakeLock?.release()
+            }
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun createNotificationChannel() {
@@ -119,7 +137,7 @@ class AudioService : Service() {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Bel Otomatis SMKN 1 Pancur Batu",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Layanan Bel dan Lagu Kebangsaan Sekolah"
             }
@@ -133,9 +151,18 @@ class AudioService : Service() {
             .setContentTitle("SMK NEGERI 1 PANCUR BATU")
             .setContentText(contentText)
             .setSmallIcon(android.R.drawable.ic_lock_silent_mode_off)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .build()
+    }
+
+    private fun updateNotification(contentText: String) {
+        try {
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(NOTIFICATION_ID, buildNotification(contentText))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroy() {
